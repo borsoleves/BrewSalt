@@ -1,0 +1,112 @@
+from tkinter import *
+
+Calcium = 40.00
+Magnesium = 24.305
+Sulfur = 32.06
+Hydrogen = 1
+Oxygen = 16.00
+Chloride = 35.43
+Water = Hydrogen*2 + Oxygen
+Sulfate = Sulfur + 4*Oxygen
+
+Gypsum = Calcium + Sulfate + 2*Water
+Epsom = Magnesium + Sulfate + 7*Water
+CaCl2 = Calcium*2 + Chloride  + 2*Water
+
+root = Tk()
+root.title("Brewing Salt Calculator")
+
+Label(text="Desired ppm").grid(row=0, column=1)
+Label(text="Ion").grid(row=0, column=0)
+Label(text="Calcium(with Sulfates)").grid(row=1, column=0)
+Label(text="Calcium(with Chlorides)").grid(row=2, column=0)
+Label(text="Total Calcium").grid(row=7, column=3)
+Label(text="Magnesium").grid(row=3, column=0)
+
+Label(text="Amount Needed (g)").grid(row=0, column=4)
+Label(text="Salt").grid(row=0, column=3)
+Label(text="Gypsum").grid(row=1, column=3)
+Label(text="Epsom Salt").grid(row=2, column=3)
+Label(text="Calcium Chloride").grid(row=3, column=3)
+
+Label(text="Desired Amount").grid(row=5, column=1)
+Label(text="Liters Water").grid(row=6, column=0)
+
+Label(text="ppm Calculated").grid(row=6, column=4)
+Label(text="Sulfate").grid(row=8, column=3)
+Label(text="Chloride").grid(row=9, column=3)
+Label(text="Sulfate:Chloride Ratio").grid(row=10, column=3)
+
+Cappm1 = StringVar()
+Cappm2 = StringVar()
+wTotalCa = StringVar()
+Mgppm = StringVar()
+wGypsum = StringVar()
+wEpsom = StringVar()
+wCaCl2 = StringVar()
+wChloride =StringVar()
+So4 = StringVar()
+Lwater = StringVar()
+So4Cl = StringVar()
+
+Entry(root, textvariable=Cappm1, width=10).grid(row=1, column=1)
+Entry(root, textvariable=Cappm2, width=10).grid(row=2, column=1)
+Entry(root, textvariable=Mgppm, width=10).grid(row=3, column=1)
+
+Entry(root, textvariable=Lwater, width=10).grid(row=6, column=1)
+
+Entry(root, textvariable=wGypsum, width=10).grid(row=1, column=4)
+Entry(root, textvariable=wEpsom, width=10).grid(row=2, column=4)
+Entry(root, textvariable=wCaCl2, width=10).grid(row=3, column=4)
+
+
+Entry(root, textvariable=wTotalCa, width=10).grid(row=7, column=4)
+Entry(root, textvariable=So4, width=10).grid(row=8, column=4)
+Entry(root, textvariable=wChloride, width=10).grid(row=9, column=4)
+Entry(root, textvariable=So4Cl, width=10).grid(row=10, column=4)
+
+def Click():
+    try:
+        gCa1 = float(Cappm1.get()) / (1000) * float(Lwater.get())
+        MolesCa1 = (gCa1) / (Calcium)
+        gGypsum = (MolesCa1) * (Gypsum)
+
+        gCa2 = float(Cappm2.get()) / (1000) * float(Lwater.get())
+        MolesCa2 = (gCa2) / (Calcium)
+        gCaCl2 = (MolesCa2) * (CaCl2) * (2)
+
+        gMg = float(Mgppm.get()) / (1000) * float(Lwater.get())
+        MolesMg = (gMg)/(Magnesium)
+        gEpsom = (MolesMg)*(Epsom)
+
+        ppmTotalCa = float(Cappm1.get()) + float(Cappm2.get())
+
+        
+
+    finally:
+        gSulfateCa = (MolesCa1) * (Sulfate)
+        gSulfateMg = (MolesMg) * (Sulfate)
+        ppmSulfate = ((gSulfateMg + gSulfateCa) * (1000))/ (float(Lwater.get()))
+
+        gChloride = (MolesCa2) * (Chloride) * 2
+        ppmChloride = (gChloride) * (1000) / (float(Lwater.get()))
+        ppmSo4Cl = (ppmSulfate / ppmChloride)
+
+       
+    wGypsum.set(round(gGypsum, 2))
+    wCaCl2.set(round(gCaCl2, 2))
+    wEpsom.set(round(gEpsom, 2))
+    So4.set(round(ppmSulfate, 2))
+    wChloride.set(round(ppmChloride, 2))
+    wTotalCa.set(round(ppmTotalCa, 2))
+    So4Cl.set(round(ppmSo4Cl, 2))
+
+   
+
+button = Button(root, text="Brew!", padx=30, pady=10, command=Click)
+button.grid(row=6, column=2)
+
+
+
+root.mainloop()
+
